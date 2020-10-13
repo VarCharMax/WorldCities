@@ -9,6 +9,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { NavMenuComponent } from './nav-menu/nav-menu.component';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { CountriesComponent } from './countries/countries.component';
 
 @NgModule({
   declarations: [
@@ -16,6 +17,7 @@ import { RouterModule } from '@angular/router';
     NavMenuComponent,
     HomeComponent,
     CitiesComponent,
+    CountriesComponent,
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -24,6 +26,7 @@ import { RouterModule } from '@angular/router';
     RouterModule.forRoot([
       { path: '', component: HomeComponent, pathMatch: 'full' },
       { path: 'cities', component: CitiesComponent },
+      { path: 'countries', component: CountriesComponent },
     ]),
     BrowserAnimationsModule,
     AngularMaterialModule,
