@@ -11,6 +11,7 @@ import { NavMenuComponent } from './nav-menu/nav-menu.component';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { CountriesComponent } from './countries/countries.component';
+import { CountryEditComponent } from './countries/country-edit.component';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 @NgModule({
   declarations: [
@@ -20,6 +21,7 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
     CitiesComponent,
     CountriesComponent,
     CityEditComponent,
+    CountryEditComponent,
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -31,6 +33,8 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
       { path: 'city/:id', component: CityEditComponent },
       { path: 'city', component: CityEditComponent },
       { path: 'countries', component: CountriesComponent },
+      { path: 'country/:id', component: CountryEditComponent },
+      { path: 'country', component: CountryEditComponent },
     ]),
     BrowserAnimationsModule,
     AngularMaterialModule,
