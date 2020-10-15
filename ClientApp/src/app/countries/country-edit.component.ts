@@ -32,7 +32,7 @@ export class CountryEditComponent implements OnInit {
     private http: HttpClient,
     @Inject('BASE_URL') private baseUrl: string
   ) {
-    this.loadData();
+    // this.loadData();
   }
   ngOnInit(): void {
     this.form = this.fb.group({
@@ -61,6 +61,7 @@ export class CountryEditComponent implements OnInit {
         (result) => {
           this.country = result;
           this.title = 'Edit - ' + this.country.name;
+          this.form.patchValue(this.country);
         },
         (error) => console.error(error)
       );
