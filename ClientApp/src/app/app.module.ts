@@ -12,10 +12,12 @@ import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { CountriesComponent } from './countries/countries.component';
 import { CountryEditComponent } from './countries/country-edit.component';
-import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
+import { BaseFormComponent } from './base.form.component';
 @NgModule({
   declarations: [
     AppComponent,
+    BaseFormComponent,
     NavMenuComponent,
     HomeComponent,
     CitiesComponent,

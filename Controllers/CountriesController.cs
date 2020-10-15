@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using WorldCities.Data;
@@ -21,7 +20,7 @@ namespace WorldCities.Controllers
 
         // GET: api/Countries
         [HttpGet]
-        public async Task<ActionResult<ApiResult<Country>>> GetCountries(
+        public async Task<ActionResult<ApiResult<CountryDTO>>> GetCountries(
                 int pageIndex = 0,
                 int pageSize = 10,
                 string sortColumn = null,
@@ -29,14 +28,21 @@ namespace WorldCities.Controllers
                 string filterColumn = null,
                 string filterQuery = null)
         {
-            return await ApiResult<Country>.CreateAsync(
-                    _context.Countries,
+            return await ApiResult<CountryDTO>.CreateAsync(
+                    _context.Countries.Select(c => new CountryDTO {
+                        Id = c.Id,
+                        Name = c.Name,
+                        ISO2 = c.ISO2,
+                        ISO3 = c.ISO3,
+                        TotCities = c.Cities.Count
+                    }),
                     pageIndex,
                     pageSize,
                     sortColumn,
                     sortOrder,
                     filterColumn,
-                    filterQuery);
+                    filterQuery
+                    );
         }
 
         // GET: api/Countries/5
@@ -53,9 +59,6 @@ namespace WorldCities.Controllers
             return country;
         }
 
-        // PUT: api/Countries/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
         public async Task<IActionResult> PutCountry(int id, Country country)
         {
@@ -85,9 +88,6 @@ namespace WorldCities.Controllers
             return NoContent();
         }
 
-        // POST: api/Countries
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
         public async Task<ActionResult<Country>> PostCountry(Country country)
         {

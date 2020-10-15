@@ -10,6 +10,7 @@ import {
   AbstractControl,
   AsyncValidatorFn,
 } from '@angular/forms';
+import { BaseFormComponent } from '../base.form.component';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 @Component({
@@ -18,7 +19,7 @@ import { map } from 'rxjs/operators';
   styleUrls: ['./city-edit.component.css'],
 })
 /** city-edit component*/
-export class CityEditComponent implements OnInit {
+export class CityEditComponent extends BaseFormComponent implements OnInit {
   title: string;
   form: FormGroup;
   city: City;
@@ -30,13 +31,21 @@ export class CityEditComponent implements OnInit {
     private router: Router,
     private http: HttpClient,
     @Inject('BASE_URL') private baseUrl: string
-  ) {}
+  ) {
+    super();
+  }
   ngOnInit(): void {
     this.form = new FormGroup(
       {
         name: new FormControl('', Validators.required),
-        lat: new FormControl('', Validators.required),
-        lon: new FormControl('', Validators.required),
+        lat: new FormControl('', [
+          Validators.required,
+          Validators.pattern(/^[-]?[0-9]+(\.[0-9]{1,4})?$/),
+        ]),
+        lon: new FormControl('', [
+          Validators.required,
+          Validators.pattern(/^[-]?[0-9]+(\.[0-9]{1,4})?$/),
+        ]),
         countryId: new FormControl('', Validators.required),
       },
       null,

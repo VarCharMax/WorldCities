@@ -9,6 +9,7 @@ import {
   AbstractControl,
   AsyncValidatorFn,
 } from '@angular/forms';
+import { BaseFormComponent } from '../base.form.component';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
@@ -18,7 +19,7 @@ import { map } from 'rxjs/operators';
   styleUrls: ['./country-edit.component.css'],
 })
 /** country-edit component*/
-export class CountryEditComponent implements OnInit {
+export class CountryEditComponent extends BaseFormComponent implements OnInit {
   title: string;
   form: FormGroup;
   country: Country;
@@ -32,6 +33,7 @@ export class CountryEditComponent implements OnInit {
     private http: HttpClient,
     @Inject('BASE_URL') private baseUrl: string
   ) {
+    super();
     // this.loadData();
   }
   ngOnInit(): void {
