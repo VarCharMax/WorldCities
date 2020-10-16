@@ -1,6 +1,7 @@
-﻿import { HttpClient, HttpParams } from '@angular/common/http';
-import { Component, Inject, OnInit, ViewChild } from '@angular/core';
+﻿import { Component, OnInit, ViewChild } from '@angular/core';
 import { City } from './city';
+import { CityService } from './city.service';
+import { ApiResult } from '../base.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -11,7 +12,13 @@ import { MatSort } from '@angular/material/sort';
 })
 /** cities component*/
 export class CitiesComponent implements OnInit {
-  public displayedColumns: string[] = ['id', 'name', 'lat', 'lon'];
+  public displayedColumns: string[] = [
+    'id',
+    'name',
+    'lat',
+    'lon',
+    'countryName',
+  ];
   public cities: MatTableDataSource<City>;
   defaultPageIndex = 0;
   defaultPageSize = 10;
@@ -22,10 +29,7 @@ export class CitiesComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   /** cities ctor */
-  constructor(
-    private http: HttpClient,
-    @Inject('BASE_URL') private baseUrl: string
-  ) {}
+  constructor(private cityService: CityService) {}
 
   ngOnInit() {
     this.loadData(null);
@@ -42,29 +46,26 @@ export class CitiesComponent implements OnInit {
   }
 
   getData(event: PageEvent) {
-    const url = this.baseUrl + 'api/Cities';
-    let params = new HttpParams()
-      .set('pageIndex', event.pageIndex.toString())
-      .set('pageSize', event.pageSize.toString())
-      .set('sortColumn', this.sort ? this.sort.active : this.defaultSortColumn)
-      .set(
-        'sortOrder',
-        this.sort ? this.sort.direction : this.defaultSortOrder
-      );
+    const sortColumn = this.sort ? this.sort.active : this.defaultSortColumn;
+    const sortOrder = this.sort ? this.sort.direction : this.defaultSortOrder;
+    const filterColumn = this.filterQuery ? this.defaultFilterColumn : null;
+    const filterQuery = this.filterQuery ? this.filterQuery : null;
 
-    if (this.filterQuery) {
-      params = params
-        .set('filterColumn', this.defaultFilterColumn)
-        .set('filterQuery', this.filterQuery);
-    }
-
-    this.http
-      .get<any>(url, { params })
+    this.cityService
+      .getData<ApiResult<City>>(
+        event.pageIndex,
+        event.pageSize,
+        sortColumn,
+        sortOrder,
+        filterColumn,
+        filterQuery
+      )
       .subscribe(
         (result) => {
           this.paginator.length = result.totalCount;
           this.paginator.pageIndex = result.pageIndex;
           this.paginator.pageSize = result.pageSize;
+
           this.cities = new MatTableDataSource<City>(result.data);
         },
         (error) => console.error(error)

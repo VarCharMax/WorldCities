@@ -4,4 +4,5 @@
   lat: number;
   lon: number;
   countryId: number;
+  countryName: string;
 }
