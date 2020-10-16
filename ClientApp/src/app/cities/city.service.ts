@@ -18,14 +18,16 @@ export class CityService extends BaseService {
     filterQuery: string
   ): Observable<ApiResult> {
     const url = this.baseUrl + 'api/Cities';
-    const params = new HttpParams()
+    let params = new HttpParams()
       .set('pageIndex', pageIndex.toString())
       .set('pageSize', pageSize.toString())
       .set('sortColumn', sortColumn)
       .set('sortOrder', sortOrder);
 
     if (filterQuery) {
-      params.set('filterColumn', filterColumn).set('filterQuery', filterQuery);
+      params = params
+        .set('filterColumn', filterColumn)
+        .set('filterQuery', filterQuery);
     }
 
     return this.http.get<ApiResult>(url, { params });

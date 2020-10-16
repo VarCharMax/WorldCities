@@ -50,7 +50,7 @@ export class CitiesComponent implements OnInit {
     const sortOrder = this.sort ? this.sort.direction : this.defaultSortOrder;
     const filterColumn = this.filterQuery ? this.defaultFilterColumn : null;
     const filterQuery = this.filterQuery ? this.filterQuery : null;
-
+    console.log('getData: ' + filterQuery);
     this.cityService
       .getData<ApiResult<City>>(
         event.pageIndex,
