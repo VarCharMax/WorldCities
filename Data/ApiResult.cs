@@ -41,8 +41,11 @@ namespace WorldCities.Data
 
             source = source.Skip(pageIndex * pageSize).Take(pageSize);
 
-            var sql = source.ToSql();
-
+#if DEBUG
+            {
+                var sql = source.ToSql();
+            }
+#endif
             var data = await source.ToListAsync();
 
             return new ApiResult<T>(data, count, pageIndex, pageSize, sortColumn, sortOrder, filterColumn, filterQuery);
