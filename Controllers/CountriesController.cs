@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
@@ -59,6 +60,7 @@ namespace WorldCities.Controllers
             return country;
         }
 
+        [Authorize]
         [HttpPut("{id}")]
         public async Task<IActionResult> PutCountry(int id, Country country)
         {
@@ -88,6 +90,7 @@ namespace WorldCities.Controllers
             return NoContent();
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<ActionResult<Country>> PostCountry(Country country)
         {
@@ -98,6 +101,7 @@ namespace WorldCities.Controllers
         }
 
         // DELETE: api/Countries/5
+        [Authorize]
         [HttpDelete("{id}")]
         public async Task<ActionResult<Country>> DeleteCountry(int id)
         {
@@ -120,17 +124,14 @@ namespace WorldCities.Controllers
 
         [HttpPost]
         [Route("IsDupeField")]
-        public bool isDupeField(int countryId, string fieldName, string fieldValue) {
-          switch (fieldName) {
-            case "name":
-              return _context.Countries.Any(c => c.Name == fieldValue && c.Id != countryId);
-            case "iso2":
-              return _context.Countries.Any(c => c.ISO2 == fieldValue && c.Id != countryId);
-            case "iso3":
-              return _context.Countries.Any(c => c.ISO3 == fieldValue && c.Id != countryId);
-            default:
-              return false;
-          }
+        public bool IsDupeField(int countryId, string fieldName, string fieldValue) {
+            return fieldName switch
+            {
+                "name" => _context.Countries.Any(c => c.Name == fieldValue && c.Id != countryId),
+                "iso2" => _context.Countries.Any(c => c.ISO2 == fieldValue && c.Id != countryId),
+                "iso3" => _context.Countries.Any(c => c.ISO3 == fieldValue && c.Id != countryId),
+                _ => false,
+            };
         }
     }
 }

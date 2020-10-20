@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Identity;
 using OfficeOpenXml;
 using System;
 using System.IO;
@@ -7,6 +8,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using WorldCities.Data;
 using WorldCities.Data.Models;
+using System.Collections.Generic;
 
 namespace WorldCities.Controllers
 {
@@ -16,22 +18,90 @@ namespace WorldCities.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly IWebHostEnvironment _env;
+        private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly UserManager<ApplicationUser> _userManager;
 
         public SeedController(
             ApplicationDbContext context,
-            IWebHostEnvironment env)
+            IWebHostEnvironment env,
+            RoleManager<IdentityRole> roleManager,
+            UserManager<ApplicationUser> userManager)
         {
             _context = context;
             _env = env;
+            _roleManager = roleManager;
+            _userManager = userManager;
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> CreateDefaultUsers()
+        {
+            string role_RegisteredUser = "RegisteredUser";
+            string role_Administrator = "Administrator";
+
+            if (await _roleManager.FindByNameAsync(role_RegisteredUser) == null)
+            {
+                await _roleManager.CreateAsync(new IdentityRole(role_RegisteredUser));
+            }
+
+            if (await _roleManager.FindByNameAsync(role_Administrator) == null)
+            {
+                await _roleManager.CreateAsync(new IdentityRole(role_Administrator));
+            }
+
+            var addedUserList = new List<ApplicationUser>();
+            var email_Admin = "admin@email.com";
+
+            if (await _userManager.FindByNameAsync(email_Admin) == null)
+            {
+                var user_Admin = new ApplicationUser()
+                {
+                    SecurityStamp = Guid.NewGuid().ToString(),
+                    UserName = email_Admin,
+                    Email = email_Admin
+                };
+
+                await _userManager.CreateAsync(user_Admin, "MySecr3r$");
+                await _userManager.AddToRoleAsync(user_Admin, role_RegisteredUser);
+                await _userManager.AddToRoleAsync(user_Admin, role_Administrator);
+
+                user_Admin.EmailConfirmed = true;
+                user_Admin.LockoutEnabled = false;
+
+                addedUserList.Add(user_Admin);
+            }
+
+            var email_User = "user@email.com";
+
+            if (await _userManager.FindByNameAsync(email_User) == null)
+            {
+                var user_User = new ApplicationUser()
+                {
+                    SecurityStamp = Guid.NewGuid().ToString(),
+                    UserName = email_User,
+                    Email = email_User
+                };
+
+                await _userManager.CreateAsync(user_User, "MySecr3r$");
+                await _userManager.AddToRoleAsync(user_User, role_RegisteredUser);
+
+                user_User.EmailConfirmed = true;
+                user_User.LockoutEnabled = false;
+
+                addedUserList.Add(user_User);
+            }
+
+            if (addedUserList.Count > 0)
+            {
+                await _context.SaveChangesAsync();
+            }
+
+            return new JsonResult(new { addedUserList.Count, User = addedUserList });
         }
 
         [HttpGet]
         public async Task<ActionResult> Import()
         {
-            // NOTE: This method has been updated on 2020.09.13.
-            // The new version is more efficient than the code described in the book's Chapter 4.
-            // ref.: https://github.com/PacktPublishing/ASP.NET-Core-3-and-Angular-9-Third-Edition/issues/15
-
             var path = Path.Combine(
                 _env.ContentRootPath,
                 String.Format("Data/Source/worldcities.xlsx"));
