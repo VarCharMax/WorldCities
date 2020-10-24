@@ -2,6 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { LoginMenuComponent } from './login-menu.component';
 
+/*
 describe('LoginMenuComponent', () => {
   let component: LoginMenuComponent;
   let fixture: ComponentFixture<LoginMenuComponent>;
@@ -23,3 +24,4 @@ describe('LoginMenuComponent', () => {
     expect(component).toBeTruthy();
   });
 });
+*/
