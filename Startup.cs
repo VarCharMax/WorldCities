@@ -71,7 +71,7 @@ namespace WorldCities
             app.UseHttpsRedirection();
 
             FileExtensionContentTypeProvider provider = new FileExtensionContentTypeProvider();
-            provider.Mappings[".manifest"] = "/application/manifest+json";
+            provider.Mappings[".webmanifest"] = "/application/manifest+json";
 
             app.UseStaticFiles(new StaticFileOptions()
             {
