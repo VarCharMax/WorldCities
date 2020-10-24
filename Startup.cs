@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
+using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -68,10 +69,35 @@ namespace WorldCities
             }
 
             app.UseHttpsRedirection();
-            app.UseStaticFiles();
+
+            FileExtensionContentTypeProvider provider = new FileExtensionContentTypeProvider();
+            provider.Mappings[".manifest"] = "/application/manifest+json";
+
+            app.UseStaticFiles(new StaticFileOptions()
+            {
+                ContentTypeProvider = provider,
+                OnPrepareResponse = (context) => {
+                    if (context.File.Name == "isOnline.txt")
+                    {
+                        context.Context.Response.Headers.Add("Cache-Control", "no-cache no-store");
+                        context.Context.Response.Headers.Add("Expires", "-1");
+                    }
+                    else
+                    {
+                        //Disable caching for all static files
+                        context.Context.Response.Headers["Cache-Control"] = Configuration["StaticFiles:Headers:Cache-Control"];
+                        context.Context.Response.Headers["Pragma"] = Configuration["StaticFiles:Headers:Pragma"];
+                        context.Context.Response.Headers["Expires"] = Configuration["StaticFiles:Headers:Expires"];
+                    }
+                }
+            });
+
             if (!env.IsDevelopment())
             {
-                app.UseSpaStaticFiles();
+                app.UseSpaStaticFiles(new StaticFileOptions()
+                {
+                    ContentTypeProvider = provider
+                });
             }
 
             app.UseRouting();

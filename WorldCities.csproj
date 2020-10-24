@@ -10,6 +10,7 @@
 
     <!-- Set this to true if you enable server-side prerendering -->
     <BuildServerSideRenderer>false</BuildServerSideRenderer>
+    <UserSecretsId>1df77c83-f7e0-4fd0-ac45-c3ab3f420dcf</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -19,14 +20,13 @@
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="3.1.9" />
     <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="3.1.9" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.9" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="3.1.9" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.9" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.9">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.4" />
-    <PackageReference Include="System.Linq.Dynamic.Core" version="1.2.4" />
+    <PackageReference Include="System.Linq.Dynamic.Core" Version="1.2.4" />
   </ItemGroup>
 
   <ItemGroup>
@@ -34,26 +34,6 @@
     <Content Remove="$(SpaRoot)**" />
     <None Remove="$(SpaRoot)**" />
     <None Include="$(SpaRoot)**" Exclude="$(SpaRoot)node_modules\**" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Remove="ClientApp\src\app\base.form.component.ts" />
-    <None Remove="ClientApp\src\app\base.service.ts" />
-    <None Remove="ClientApp\src\app\cities\cities.component.spec.ts" />
-    <None Remove="ClientApp\src\app\cities\city.service.ts" />
-    <None Remove="ClientApp\src\app\cities\city.ts" />
-    <None Remove="ClientApp\src\app\countries\country.service.ts" />
-    <None Remove="ClientApp\src\app\countries\country.ts" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <TypeScriptCompile Include="ClientApp\src\app\base.form.component.ts" />
-    <TypeScriptCompile Include="ClientApp\src\app\base.service.ts" />
-    <TypeScriptCompile Include="ClientApp\src\app\cities\cities.component.spec.ts" />
-    <TypeScriptCompile Include="ClientApp\src\app\cities\city.service.ts" />
-    <TypeScriptCompile Include="ClientApp\src\app\cities\city.ts" />
-    <TypeScriptCompile Include="ClientApp\src\app\countries\country.service.ts" />
-    <TypeScriptCompile Include="ClientApp\src\app\countries\country.ts" />
   </ItemGroup>
 
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">

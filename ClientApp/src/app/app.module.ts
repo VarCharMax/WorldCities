@@ -17,6 +17,8 @@ import { BaseFormComponent } from './base.form.component';
 import { ApiAuthorizationModule } from 'src/api-authorization/api-authorization.module';
 import { AuthorizeGuard } from 'src/api-authorization/authorize.guard';
 import { AuthorizeInterceptor } from 'src/api-authorization/authorize.interceptor';
+import { ServiceWorkerModule } from '@angular/service-worker';
+import { environment } from '../environments/environment';
 @NgModule({
   declarations: [
     AppComponent,
@@ -61,6 +63,10 @@ import { AuthorizeInterceptor } from 'src/api-authorization/authorize.intercepto
     BrowserAnimationsModule,
     AngularMaterialModule,
     ReactiveFormsModule,
+    ServiceWorkerModule.register('ngsw-worker.js', {
+      registrationStrategy: 'registerImmediately',
+      enabled: environment.production,
+    }),
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthorizeInterceptor, multi: true },
