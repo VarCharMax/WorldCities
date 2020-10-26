@@ -10,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using WorldCities.Data;
 using WorldCities.Data.Models;
+using Microsoft.AspNetCore.HttpOverrides;
 
 namespace WorldCities
 {
@@ -101,6 +102,11 @@ namespace WorldCities
             }
 
             app.UseRouting();
+
+            app.UseForwardedHeaders(new ForwardedHeadersOptions() { 
+                ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+            });
+            
             app.UseAuthentication();
             app.UseIdentityServer();
             app.UseAuthorization();
